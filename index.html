@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>텍스트 유틸리티 - 무료 온라인 도구</title>
+    <meta name="description" content="무료 온라인 텍스트 처리 도구: Base64 인코딩, JSON 포맷터, 해시 생성기, 단어수 카운터 등">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .ad-space {
+            background: rgba(255,255,255,0.1);
+            border: 2px dashed rgba(255,255,255,0.3);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .tool-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+
+        .tool-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .tool-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        textarea, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            resize: vertical;
+        }
+
+        textarea:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            min-height: 120px;
+            margin-bottom: 15px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-number {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .footer {
+            text-align: center;
+            color: white;
+            margin-top: 40px;
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🛠️ 텍스트 유틸리티</h1>
+            <p>개발자와 일반 사용자를 위한 무료 온라인 텍스트 처리 도구</p>
+        </div>
+
+        <div class="ad-space">
+            📢 광고 공간 - Google AdSense 또는 기타 광고 네트워크를 여기에 배치
+        </div>
+
+        <div class="tools-grid">
+            <!-- Base64 인코딩/디코딩 -->
+            <div class="tool-card">
+                <div class="tool-title">
+                    <div class="tool-icon">64</div>
+                    Base64 인코딩/디코딩
+                </div>
+                <textarea id="base64Input" placeholder="인코딩하거나 디코딩할 텍스트를 입력하세요..."></textarea>
+                <div class="button-group">
+                    <button onclick="encodeBase64()">인코딩</button>
+                    <button onclick="decodeBase64()">디코딩</button>
+                    <button onclick="clearBase64()">지우기</button>
+                </div>
+                <div id="base64Result" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- JSON 포맷터 -->
+            <div class="tool-card">
+                <div class="tool-title">
+                    <div class="tool-icon">{}</div>
+                    JSON 포맷터/검증기
+                </div>
+                <textarea id="jsonInput" placeholder='{"key": "value"} 형태의 JSON을 입력하세요...'></textarea>
+                <div class="button-group">
+                    <button onclick="formatJson()">포맷</button>
+                    <button onclick="minifyJson()">압축</button>
+                    <button onclick="validateJson()">검증</button>
+                    <button onclick="clearJson()">지우기</button>
+                </div>
+                <div id="jsonResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- 해시 생성기 -->
+            <div class="tool-card">
+                <div class="tool-title">
+                    <div class="tool-icon">#</div>
+                    해시 생성기
+                </div>
+                <textarea id="hashInput" placeholder="해시를 생성할 텍스트를 입력하세요..."></textarea>
+                <div class="button-group">
+                    <button onclick="generateHash('SHA-256')">SHA-256</button>
+                    <button onclick="generateHash('SHA-1')">SHA-1</button>
+                    <button onclick="clearHash()">지우기</button>
+                </div>
+                <div id="hashResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- 텍스트 분석기 -->
+            <div class="tool-card">
+                <div class="tool-title">
+                    <div class="tool-icon">📊</div>
+                    텍스트 분석기
+                </div>
+                <textarea id="textAnalyzer" placeholder="분석할 텍스트를 입력하세요..." oninput="analyzeText()"></textarea>
+                <div class="stats">
+                    <div class="stat-item">
+                        <div class="stat-number" id="charCount">0</div>
+                        <div class="stat-label">문자</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="charCountNoSpace">0</div>
+                        <div class="stat-label">공백제외</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="wordCount">0</div>
+                        <div class="stat-label">단어</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="lineCount">0</div>
+                        <div class="stat-label">줄</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- URL 인코딩/디코딩 -->
+            <div class="tool-card">
+                <div class="tool-title">
+                    <div class="tool-icon">🔗</div>
+                    URL 인코딩/디코딩
+                </div>
+                <textarea id="urlInput" placeholder="URL을 입력하세요..."></textarea>
+                <div class="button-group">
+                    <button onclick="encodeUrl()">인코딩</button>
+                    <button onclick="decodeUrl()">디코딩</button>
+                    <button onclick="clearUrl()">지우기</button>
+                </div>
+                <div id="urlResult" class="result" style="display: none;"></div>
+            </div>
+
+            <!-- HTML 엔티티 -->
+            <div class="tool-card">
+                <div class="tool-title">
+                    <div class="tool-icon">&lt;&gt;</div>
+                    HTML 엔티티 변환
+                </div>
+                <textarea id="htmlInput" placeholder="HTML 엔티티를 변환할 텍스트를 입력하세요..."></textarea>
+                <div class="button-group">
+                    <button onclick="encodeHtml()">인코딩</button>
+                    <button onclick="decodeHtml()">디코딩</button>
+                    <button onclick="clearHtml()">지우기</button>
+                </div>
+                <div id="htmlResult" class="result" style="display: none;"></div>
+            </div>
+        </div>
+
+        <div class="ad-space">
+            📢 하단 광고 공간 - 추가 수익을 위한 배너 광고 위치
+        </div>
+
+        <div class="footer">
+            <p>© 2024 텍스트 유틸리티 | 모든 처리는 브라우저에서 로컬로 실행됩니다</p>
+        </div>
+    </div>
+
+    <script>
+        // Base64 인코딩/디코딩
+        function encodeBase64() {
+            const input = document.getElementById('base64Input').value;
+            const result = document.getElementById('base64Result');
+            try {
+                const encoded = btoa(unescape(encodeURIComponent(input)));
+                result.textContent = encoded;
+                result.style.display = 'block';
+            } catch (e) {
+                result.textContent = '오류: 인코딩에 실패했습니다.';
+                result.style.display = 'block';
+            }
+        }
+
+        function decodeBase64() {
+            const input = document.getElementById('base64Input').value;
+            const result = document.getElementById('base64Result');
+            try {
+                const decoded = decodeURIComponent(escape(atob(input)));
+                result.textContent = decoded;
+                result.style.display = 'block';
+            } catch (e) {
+                result.textContent = '오류: 올바른 Base64 형식이 아닙니다.';
+                result.style.display = 'block';
+            }
+        }
+
+        function clearBase64() {
+            document.getElementById('base64Input').value = '';
+            document.getElementById('base64Result').style.display = 'none';
+        }
+
+        // JSON 포맷터
+        function formatJson() {
+            const input = document.getElementById('jsonInput').value;
+            const result = document.getElementById('jsonResult');
+            try {
+                const parsed = JSON.parse(input);
+                result.textContent = JSON.stringify(parsed, null, 2);
+                result.style.display = 'block';
+            } catch (e) {
+                result.textContent = '오류: 올바른 JSON 형식이 아닙니다.\n' + e.message;
+                result.style.display = 'block';
+            }
+        }
+
+        function minifyJson() {
+            const input = document.getElementById('jsonInput').value;
+            const result = document.getElementById('jsonResult');
+            try {
+                const parsed = JSON.parse(input);
+                result.textContent = JSON.stringify(parsed);
+                result.style.display = 'block';
+            } catch (e) {
+                result.textContent = '오류: 올바른 JSON 형식이 아닙니다.\n' + e.message;
+                result.style.display = 'block';
+            }
+        }
+
+        function validateJson() {
+            const input = document.getElementById('jsonInput').value;
+            const result = document.getElementById('jsonResult');
+            try {
+                JSON.parse(input);
+                result.textContent = '✅ 유효한 JSON입니다!';
+                result.style.display = 'block';
+            } catch (e) {
+                result.textContent = '❌ 유효하지 않은 JSON입니다.\n오류: ' + e.message;
+                result.style.display = 'block';
+            }
+        }
+
+        function clearJson() {
+            document.getElementById('jsonInput').value = '';
+            document.getElementById('jsonResult').style.display = 'none';
+        }
+
+        // 해시 생성기
+        async function generateHash(algorithm) {
+            const input = document.getElementById('hashInput').value;
+            const result = document.getElementById('hashResult');
+            
+            if (!input) {
+                result.textContent = '텍스트를 입력해주세요.';
+                result.style.display = 'block';
+                return;
+            }
+
+            try {
+                const encoder = new TextEncoder();
+                const data = encoder.encode(input);
+                const hashBuffer = await crypto.subtle.digest(algorithm, data);
+                const hashArray = Array.from(new Uint8Array(hashBuffer));
+                const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                
+                result.textContent = `${algorithm}: ${hashHex}`;
+                result.style.display = 'block';
+            } catch (e) {
+                result.textContent = '오류: 해시 생성에 실패했습니다.';
+                result.style.display = 'block';
+            }
+        }
+
+        function clearHash() {
+            document.getElementById('hashInput').value = '';
+            document.getElementById('hashResult').style.display = 'none';
+        }
+
+        // 텍스트 분석기
+        function analyzeText() {
+            const text = document.getElementById('textAnalyzer').value;
+            
+            document.getElementById('charCount').textContent = text.length;
+            document.getElementById('charCountNoSpace').textContent = text.replace(/\s/g, '').length;
+            document.getElementById('wordCount').textContent = text.trim() ? text.trim().split(/\s+/).length : 0;
+            document.getElementById('lineCount').textContent = text.split('\n').length;
+        }
+
+        // URL 인코딩/디코딩
+        function encodeUrl() {
+            const input = document.getElementById('urlInput').value;
+            const result = document.getElementById('urlResult');
+            try {
+                result.textContent = encodeURIComponent(input);
+                result.style.display = 'block';
+            } catch (e) {
+                result.textContent = '오류: URL 인코딩에 실패했습니다.';
+                result.style.display = 'block';
+            }
+        }
+
+        function decodeUrl() {
+            const input = document.getElementById('urlInput').value;
+            const result = document.getElementById('urlResult');
+            try {
+                result.textContent = decodeURIComponent(input);
+                result.style.display = 'block';
+            } catch (e) {
+                result.textContent = '오류: URL 디코딩에 실패했습니다.';
+                result.style.display = 'block';
+            }
+        }
+
+        function clearUrl() {
+            document.getElementById('urlInput').value = '';
+            document.getElementById('urlResult').style.display = 'none';
+        }
+
+        // HTML 엔티티
+        function encodeHtml() {
+            const input = document.getElementById('htmlInput').value;
+            const result = document.getElementById('htmlResult');
+            const encoded = input
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+            result.textContent = encoded;
+            result.style.display = 'block';
+        }
+
+        function decodeHtml() {
+            const input = document.getElementById('htmlInput').value;
+            const result = document.getElementById('htmlResult');
+            const decoded = input
+                .replace(/&amp;/g, '&')
+                .replace(/&lt;/g, '<')
+                .replace(/&gt;/g, '>')
+                .replace(/&quot;/g, '"')
+                .replace(/&#39;/g, "'");
+            result.textContent = decoded;
+            result.style.display = 'block';
+        }
+
+        function clearHtml() {
+            document.getElementById('htmlInput').value = '';
+            document.getElementById('htmlResult').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
